@@ -48,6 +48,8 @@ private:
 	void processEvents();
 	void processKeys(sf::Event t_event);
 	void processMousePressed(sf::Event t_event);
+	void processMouseMove(sf::Event t_event);
+	void processMouseRelease(sf::Event t_event);
 	
 	
 	void update(sf::Time t_deltaTime);
@@ -62,11 +64,13 @@ private:
 	// Using m_ for all member names
 	//--------------------
 	sf::RenderWindow m_window;					// main SFML window
+	bool m_exitGame;							// control exiting game
+
 	sf::CircleShape m_shell;					// setting shape of shell to a circle
 	sf::Vector2f m_position{ 400.0f, 300.0f };	// position of shell
 	sf::Vector2f m_velocity{ 0.0f, 0.0f };		// velocity of shell
 
-	bool m_exitGame;							// control exiting game
+	
 
 	sf::VertexArray m_aimLine{ sf::Lines };				//Line for aiming
 	bool m_readyToFire{ true };							//Player allowed to fire

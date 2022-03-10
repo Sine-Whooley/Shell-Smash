@@ -8,6 +8,7 @@
 
 
 #include "Game.h"
+#include "Vector2.h"
 #include <iostream>
 
 /// <summary>
@@ -68,13 +69,25 @@ void Game::processEvents()
 	sf::Event newEvent;
 	while (m_window.pollEvent(newEvent))
 	{
-		if ( sf::Event::Closed == newEvent.type) // window message
+		if (sf::Event::Closed == newEvent.type)				// window message
 		{
 			m_exitGame = true;
 		}
-		if (sf::Event::KeyPressed == newEvent.type) //user pressed a key
+		if (sf::Event::KeyPressed == newEvent.type)				//user pressed a key
 		{
 			processKeys(newEvent);
+		}
+		if (sf::Event::MouseButtonPressed == newEvent.type)
+		{
+			processMousePressed(newEvent);
+		}
+		if (sf::Event::MouseMoved == newEvent.type)
+		{
+			processMouseMove(newEvent);
+		}
+		if (sf::Event::MouseButtonReleased == newEvent.type)
+		{
+			processMouseRelease(newEvent);
 		}
 	}
 }
@@ -89,6 +102,60 @@ void Game::processKeys(sf::Event t_event)
 	if (sf::Keyboard::Escape == t_event.key.code)
 	{
 		m_exitGame = true;
+	}
+}
+
+void Game::processMousePressed(sf::Event t_event)
+{
+	if (m_readyToFire)							//Only runs if readyToFire is true, if its false, it wont run
+	{
+		sf::Vertex point;
+		point.color = sf::Color::White;
+
+		m_aimLine.clear();
+											
+		point.position = m_position;
+										
+		m_aimLine.append(point);				
+
+		point.position.x = static_cast<float>(t_event.mouseButton.x);
+		point.position.y = static_cast<float>(t_event.mouseButton.y);
+		m_aimLine.append(point);
+
+		//Sets up the bool
+		m_readyToFire = false;
+		m_aimingNow = true;
+	}
+}
+
+void Game::processMouseMove(sf::Event t_event)
+{
+	sf::Vertex point;
+	point.color = sf::Color::White;
+
+
+	if (m_aimingNow)
+	{
+		//find out what a vertex array is and what the actual contents of the vertex array are
+		m_aimLine[1].position.x = static_cast<float>(t_event.mouseMove.x);
+		m_aimLine[1].position.y = static_cast<float>(t_event.mouseMove.y);
+	}
+}
+
+void Game::processMouseRelease(sf::Event t_event)
+{
+	sf::Vector2f direction{ 0.0f, 0.0f };
+	sf::Vector2f mouseLocation{ 0.0f, 0.0f }; //temp vector
+
+	if (m_aimingNow)
+	{
+		mouseLocation.x = static_cast<float>(t_event.mouseButton.x);
+		mouseLocation.y = static_cast<float>(t_event.mouseButton.y);
+
+		direction = mouseLocation - m_position;
+
+		m_aimingNow = false;
+		m_velocity = direction * POWER_ADJUSTMENT;
 	}
 }
 
@@ -116,6 +183,13 @@ void Game::render()
 {
 	m_window.clear(sf::Color::Black);
 	m_window.draw(m_shell);
+
+	//Displays it on screen
+	if (m_aimingNow)
+	{
+		m_window.draw(m_aimLine);					
+	}
+
 	m_window.display();
 }
 
@@ -131,6 +205,11 @@ void Game::moveShell()
 {
 	m_position += m_velocity;
 	m_shell.setPosition(m_position);
+
+	if (m_velocity == sf::Vector2f{ 0.0f,0.0f } && !m_aimingNow)
+	{
+		m_readyToFire = true;
+	}
 }
 
 
