@@ -47,7 +47,7 @@ private:
 	//---------------
 	void processEvents();
 	void processKeys(sf::Event t_event);
-	
+	void processMousePressed(sf::Event t_event);
 	
 	
 	void update(sf::Time t_deltaTime);
@@ -64,9 +64,14 @@ private:
 	sf::RenderWindow m_window;					// main SFML window
 	sf::CircleShape m_shell;					// setting shape of shell to a circle
 	sf::Vector2f m_position{ 400.0f, 300.0f };	// position of shell
-	sf::Vector2f m_velocity{ 3.0f, -2.5f };		// velocity of shell
+	sf::Vector2f m_velocity{ 0.0f, 0.0f };		// velocity of shell
 
 	bool m_exitGame;							// control exiting game
+
+	sf::VertexArray m_aimLine{ sf::Lines };				//Line for aiming
+	bool m_readyToFire{ true };							//Player allowed to fire
+	bool m_aimingNow{ false };							//Player is aiming (nothing will happen while its false)
+														//wont start until ready to aimingNow is true
 
 };
 

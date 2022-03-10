@@ -17,7 +17,7 @@
 /// load and setup thne image
 /// </summary>
 Game::Game() :
-	m_window{ sf::VideoMode{ 800U, 600U, 32U }, "SFML Game" },
+	m_window{ sf::VideoMode{ 800U, 600U, 32U }, "Shell Smash" },
 	m_exitGame{false} //when true game will exit
 {
 	setUpShell();
@@ -25,7 +25,7 @@ Game::Game() :
 
 /// <summary>
 /// default destructor we didn't dynamically allocate anything
-/// so we don't need to free it, but mthod needs to be here
+/// so we don't need to free it, but method needs to be here
 /// </summary>
 Game::~Game()
 {
