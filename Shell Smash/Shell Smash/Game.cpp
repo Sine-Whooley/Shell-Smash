@@ -1,14 +1,14 @@
-/// <summary>
-/// @author Peter Lowe
-/// @date May 2019
-///
-/// you need to change the above lines or lose marks
-/// </summary>
+//Name: Síne Whooley
+//Student Number: C00271403
+//Date: 10/03/22
+//------------------
+//Project: Shell Smash Project
+//------------------
+
+
 
 #include "Game.h"
 #include <iostream>
-
-
 
 /// <summary>
 /// default constructor
@@ -20,8 +20,7 @@ Game::Game() :
 	m_window{ sf::VideoMode{ 800U, 600U, 32U }, "SFML Game" },
 	m_exitGame{false} //when true game will exit
 {
-	setupFontAndText(); // load font 
-	setupSprite(); // load texture
+	setUpShell();
 }
 
 /// <summary>
@@ -103,6 +102,9 @@ void Game::update(sf::Time t_deltaTime)
 	{
 		m_window.close();
 	}
+	
+	//Every update will call these methods
+	moveShell();
 }
 
 /// <summary>
@@ -110,42 +112,21 @@ void Game::update(sf::Time t_deltaTime)
 /// </summary>
 void Game::render()
 {
-	m_window.clear(sf::Color::White);
-	m_window.draw(m_welcomeMessage);
-	m_window.draw(m_logoSprite);
+	m_window.clear(sf::Color::Black);
+	m_window.draw(m_shell);
 	m_window.display();
 }
 
-/// <summary>
-/// load the font and setup the text message for screen
-/// </summary>
-void Game::setupFontAndText()
+void Game::setUpShell()
 {
-	if (!m_ArialBlackfont.loadFromFile("ASSETS\\FONTS\\ariblk.ttf"))
-	{
-		std::cout << "problem loading arial black font" << std::endl;
-	}
-	m_welcomeMessage.setFont(m_ArialBlackfont);
-	m_welcomeMessage.setString("SFML Game");
-	m_welcomeMessage.setStyle(sf::Text::Underlined | sf::Text::Italic | sf::Text::Bold);
-	m_welcomeMessage.setPosition(40.0f, 40.0f);
-	m_welcomeMessage.setCharacterSize(80U);
-	m_welcomeMessage.setOutlineColor(sf::Color::Red);
-	m_welcomeMessage.setFillColor(sf::Color::Black);
-	m_welcomeMessage.setOutlineThickness(3.0f);
-
+	m_shell.setFillColor(sf::Color::Green);
+	m_shell.setPosition(m_position);
+	m_shell.setRadius(RADIUS);
+	m_shell.setOrigin(RADIUS, RADIUS);
 }
 
-/// <summary>
-/// load the texture and setup the sprite for the logo
-/// </summary>
-void Game::setupSprite()
+void Game::moveShell()
 {
-	if (!m_logoTexture.loadFromFile("ASSETS\\IMAGES\\SFML-LOGO.png"))
-	{
-		// simple error message if previous call fails
-		std::cout << "problem loading logo" << std::endl;
-	}
-	m_logoSprite.setTexture(m_logoTexture);
-	m_logoSprite.setPosition(300.0f, 180.0f);
+	m_position += m_velocity;
+	m_shell.setPosition(m_position);
 }

@@ -1,9 +1,9 @@
-/// <summary>
-/// simple game loop for SFML[2.5.1]
-/// 
-/// @author Peter Lowe
-/// @date May 2019
-/// </summary>
+//Name: Síne Whooley
+//Student Number: C00271403
+//Date: 10/03/22
+//------------------
+//Project: Shell Smash Project
+//------------------
 
 #ifdef _DEBUG 
 #pragma comment(lib,"sfml-graphics-d.lib") 
@@ -22,10 +22,10 @@
 
 #include "Game.h"
 
-/// <summary>
-/// main enrtry point
-/// </summary>
-/// <returns>success or failure</returns>
+//---------------
+// Main enrtry point
+// Sucess or Failure
+//---------------
 int main()
 {
 	Game game;
