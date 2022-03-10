@@ -105,6 +105,7 @@ void Game::update(sf::Time t_deltaTime)
 	
 	//Every update will call these methods
 	moveShell();
+	checkBoundry(m_position, m_velocity);
 }
 
 /// <summary>
@@ -129,4 +130,36 @@ void Game::moveShell()
 {
 	m_position += m_velocity;
 	m_shell.setPosition(m_position);
+}
+
+
+//----------------
+//Check edges of the screen
+//Invert to the X or Y component of velocity to simulate a bounce
+//----------------
+void Game::checkBoundry(sf::Vector2f t_position, sf::Vector2f& t_velocity)
+{
+	//Boundry for the top edge (based on the y co-ordinate)
+	if (t_position.y < RADIUS)
+	{
+		t_velocity.y = -t_velocity.y;
+	}
+
+	//Boundry for right edge (based on the x co-ordinate)
+	if (t_position.x > SCREEN_WIDTH - RADIUS)
+	{
+		t_velocity.x = -t_velocity.x;
+	}
+
+	//Boundry for bottom edge( based on y co-ordinate)
+	if (t_position.y > SCREEN_HEIGHT - RADIUS)
+	{
+		t_velocity.y = -t_velocity.y;
+	}
+
+	//Boundry for left edge (based on the x co-ordinate)#
+	if (t_position.x < RADIUS)
+	{
+		t_velocity.x = -t_velocity.x;
+	}
 }

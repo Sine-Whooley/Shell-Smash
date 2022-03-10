@@ -11,7 +11,8 @@
 
 //Global Variables (Constant through out)
 const float RADIUS = 15.0f;
-
+const float SCREEN_HEIGHT = 600.f;
+const float SCREEN_WIDTH = 800.0F;
 
 /// <summary>
 /// include guards used so we don't process this file twice
@@ -25,9 +26,9 @@ class Game
 public:
 	Game();
 	~Game();
-	/// <summary>
+	//--------------
 	/// main method for game
-	/// </summary>
+	//--------------
 	void run();
 
 private:
@@ -46,6 +47,7 @@ private:
 	void render();
 	void setUpShell(); //Creating definition 
 	void moveShell();
+	void checkBoundry(sf::Vector2f t_position, sf::Vector2f &t_velocity );
 
 
 	//--------------------
@@ -55,7 +57,7 @@ private:
 	sf::RenderWindow m_window;					// main SFML window
 	sf::CircleShape m_shell;					// setting shape of shell to a circle
 	sf::Vector2f m_position{ 400.0f, 300.0f };	// position of shell
-	sf::Vector2f m_velocity;
+	sf::Vector2f m_velocity{ 3.0f, -2.5f };		// velocity of shell
 
 	bool m_exitGame;							// control exiting game
 
