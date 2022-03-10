@@ -106,6 +106,7 @@ void Game::update(sf::Time t_deltaTime)
 	//Every update will call these methods
 	moveShell();
 	checkBoundry(m_position, m_velocity);
+	applyFriction(m_velocity);
 }
 
 /// <summary>
@@ -161,5 +162,22 @@ void Game::checkBoundry(sf::Vector2f t_position, sf::Vector2f& t_velocity)
 	if (t_position.x < RADIUS)
 	{
 		t_velocity.x = -t_velocity.x;
+	}
+}
+
+void Game::applyFriction(sf::Vector2f& t_velocity)
+{
+
+	if (vectorLengthSquared(t_velocity) < SLOW_SPEED)			// Slow speed squared
+	{
+		if (vectorLengthSquared(t_velocity) < STALL_SPEED)		//reducing speed by this amount
+		{
+			t_velocity = sf::Vector2f{ 0.0f, 0.0f };			//Speed at which it stops 
+		}
+		t_velocity = t_velocity * LOW_FRICTION;					//Reduce by a specific amount
+	}
+	else
+	{
+		t_velocity = t_velocity * HIGH_FRICTION;
 	}
 }

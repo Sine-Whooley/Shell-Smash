@@ -12,7 +12,13 @@
 //Global Variables (Constant through out)
 const float RADIUS = 15.0f;
 const float SCREEN_HEIGHT = 600.f;
-const float SCREEN_WIDTH = 800.0F;
+const float SCREEN_WIDTH = 800.0f;
+const float POWER_ADJUSTMENT = 0.2f;
+const float LOW_FRICTION = 0.995f;
+const float HIGH_FRICTION = 0.991f;
+const float STALL_SPEED = 0.5f;
+const float SLOW_SPEED = 15.0f;
+
 
 /// <summary>
 /// include guards used so we don't process this file twice
@@ -20,6 +26,7 @@ const float SCREEN_WIDTH = 800.0F;
 /// Don't forget the endif at the bottom
 /// </summary>
 #include <SFML/Graphics.hpp>
+#include "Vector2.h"
 
 class Game
 {
@@ -48,7 +55,7 @@ private:
 	void setUpShell(); //Creating definition 
 	void moveShell();
 	void checkBoundry(sf::Vector2f t_position, sf::Vector2f &t_velocity );
-
+	void applyFriction(sf::Vector2f& t_velocity);
 
 	//--------------------
 	// Member variables 
