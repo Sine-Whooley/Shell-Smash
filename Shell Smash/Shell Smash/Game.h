@@ -19,6 +19,8 @@ const float HIGH_FRICTION = 0.991f;
 const float STALL_SPEED = 0.5f;
 const float SLOW_SPEED = 15.0f;
 
+const int NO_OF_SHELLS = 11;
+
 
 /// <summary>
 /// include guards used so we don't process this file twice
@@ -54,10 +56,13 @@ private:
 	
 	void update(sf::Time t_deltaTime);
 	void render();
-	void setUpShell(); //Creating definition 
+	void setUpShells();							//Creating definition 
 	void moveShell();
 	void checkBoundry(sf::Vector2f t_position, sf::Vector2f &t_velocity );
+	void checkBoundries();
 	void applyFriction(sf::Vector2f& t_velocity);
+	void frictionToAll();
+	
 
 	//--------------------
 	// Member variables 
@@ -67,16 +72,17 @@ private:
 	bool m_exitGame;							// control exiting game
 
 	sf::CircleShape m_shell;					// setting shape of shell to a circle
-	sf::Vector2f m_position{ 400.0f, 300.0f };	// position of shell
-	sf::Vector2f m_velocity{ 0.0f, 0.0f };		// velocity of shell
+	sf::Vector2f m_positions[NO_OF_SHELLS];		// position of shell
+	sf::Vector2f m_velocitys[NO_OF_SHELLS];		// velocity of shell
+	sf::VertexArray m_aimLine{ sf::Lines };		//Line for aiming
 
-	
 
-	sf::VertexArray m_aimLine{ sf::Lines };				//Line for aiming
-	bool m_readyToFire{ true };							//Player allowed to fire
-	bool m_aimingNow{ false };							//Player is aiming (nothing will happen while its false)
-														//wont start until ready to aimingNow is true
+	bool m_isGreen[NO_OF_SHELLS];				//Is the shell green or red
+	bool m_readyToFire{ true };					//Player allowed to fire
+	bool m_aimingNow{ false };					//Player is aiming (nothing will happen while its false)
+												//wont start until ready to aimingNow is true
 
+	int m_lastShell{ 2 };						//Number of active Shells
 };
 
 #endif // !GAME_HPP

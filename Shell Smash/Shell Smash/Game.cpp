@@ -21,7 +21,7 @@ Game::Game() :
 	m_window{ sf::VideoMode{ 800U, 600U, 32U }, "Shell Smash" },
 	m_exitGame{false} //when true game will exit
 {
-	setUpShell();
+	setUpShells();
 }
 
 /// <summary>
@@ -114,7 +114,7 @@ void Game::processMousePressed(sf::Event t_event)
 
 		m_aimLine.clear();
 											
-		point.position = m_position;
+		point.position = m_positions[0];
 										
 		m_aimLine.append(point);				
 
@@ -152,10 +152,10 @@ void Game::processMouseRelease(sf::Event t_event)
 		mouseLocation.x = static_cast<float>(t_event.mouseButton.x);
 		mouseLocation.y = static_cast<float>(t_event.mouseButton.y);
 
-		direction = mouseLocation - m_position;
+		direction = mouseLocation - m_positions[0];
 
 		m_aimingNow = false;
-		m_velocity = direction * POWER_ADJUSTMENT;
+		m_velocitys[0] = direction * POWER_ADJUSTMENT;
 	}
 }
 
@@ -172,8 +172,8 @@ void Game::update(sf::Time t_deltaTime)
 	
 	//Every update will call these methods
 	moveShell();
-	checkBoundry(m_position, m_velocity);
-	applyFriction(m_velocity);
+	checkBoundries();
+	frictionToAll();
 }
 
 /// <summary>
@@ -182,7 +182,22 @@ void Game::update(sf::Time t_deltaTime)
 void Game::render()
 {
 	m_window.clear(sf::Color::Black);
-	m_window.draw(m_shell);
+	
+	for (int i = 0; i < m_lastShell; i++)
+	{
+		m_shell.setPosition(m_positions[i]);
+		if (m_isGreen[i])
+		{
+			m_shell.setFillColor(sf::Color::Green);
+		}
+		else
+		{
+			m_shell.setFillColor(sf::Color::Red);
+		}
+		
+		m_window.draw(m_shell);
+	}
+		
 
 	//Displays it on screen
 	if (m_aimingNow)
@@ -193,20 +208,31 @@ void Game::render()
 	m_window.display();
 }
 
-void Game::setUpShell()
+void Game::setUpShells()
 {
 	m_shell.setFillColor(sf::Color::Green);
-	m_shell.setPosition(m_position);
 	m_shell.setRadius(RADIUS);
 	m_shell.setOrigin(RADIUS, RADIUS);
+
+	for (int i = 0; i < NO_OF_SHELLS; i++)
+	{
+		m_velocitys[i] = sf::Vector2f {0.0f, 0.0f};
+		m_positions[i] = sf::Vector2f{ 200.0f + i * 100.0f, 300.0f };
+	}
+	m_isGreen[0] = true;
+	m_isGreen[1] = false;
+
+	m_velocitys[1] = sf::Vector2f{ 4.0f, 6.0f };
 }
 
 void Game::moveShell()
 {
-	m_position += m_velocity;
-	m_shell.setPosition(m_position);
+	for(int i =0; i < m_lastShell; i++)
+	{
+		m_positions[i] += m_velocitys[i];
+	}
 
-	if (m_velocity == sf::Vector2f{ 0.0f,0.0f } && !m_aimingNow)
+	if (m_velocitys[0] == sf::Vector2f{ 0.0f,0.0f } && !m_aimingNow)
 	{
 		m_readyToFire = true;
 	}
@@ -244,6 +270,14 @@ void Game::checkBoundry(sf::Vector2f t_position, sf::Vector2f& t_velocity)
 	}
 }
 
+void Game::checkBoundries()
+{
+	for (int i = 0; i < m_lastShell; i++)
+	{
+		checkBoundry(m_positions[i], m_velocitys[i]);
+	}
+}
+
 void Game::applyFriction(sf::Vector2f& t_velocity)
 {
 
@@ -258,5 +292,13 @@ void Game::applyFriction(sf::Vector2f& t_velocity)
 	else
 	{
 		t_velocity = t_velocity * HIGH_FRICTION;
+	}
+}
+
+void Game::frictionToAll()
+{
+	for (int i = 0; i < m_lastShell; i++)
+	{
+		applyFriction(m_velocitys[i]);
 	}
 }
