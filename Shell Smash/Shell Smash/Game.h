@@ -11,6 +11,9 @@
 
 //Global Variables (Constant through out)
 const float RADIUS = 15.0f;
+const float DIAMETER = RADIUS * 2.0f;
+const float DIAMETER_SQUARED = DIAMETER * DIAMETER;
+
 const float SCREEN_HEIGHT = 600.f;
 const float SCREEN_WIDTH = 800.0f;
 const float POWER_ADJUSTMENT = 0.2f;
@@ -18,7 +21,6 @@ const float LOW_FRICTION = 0.995f;
 const float HIGH_FRICTION = 0.991f;
 const float STALL_SPEED = 0.5f;
 const float SLOW_SPEED = 15.0f;
-
 const int NO_OF_SHELLS = 11;
 
 
@@ -62,7 +64,9 @@ private:
 	void checkBoundries();
 	void applyFriction(sf::Vector2f& t_velocity);
 	void frictionToAll();
-	
+	bool checkForACollision(int t_firstIndex, int t_secondIndex);
+	void checkCollisions();
+
 
 	//--------------------
 	// Member variables 

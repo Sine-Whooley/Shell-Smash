@@ -11,6 +11,8 @@
 #include "Vector2.h"
 #include <iostream>
 
+using namespace std;
+
 /// <summary>
 /// default constructor
 /// setup the window properties
@@ -174,6 +176,7 @@ void Game::update(sf::Time t_deltaTime)
 	moveShell();
 	checkBoundries();
 	frictionToAll();
+	checkCollisions();
 }
 
 /// <summary>
@@ -222,7 +225,7 @@ void Game::setUpShells()
 	m_isGreen[0] = true;
 	m_isGreen[1] = false;
 
-	m_velocitys[1] = sf::Vector2f{ 4.0f, 6.0f };
+	//m_velocitys[1] = sf::Vector2f{ 4.0f, 6.0f };
 }
 
 void Game::moveShell()
@@ -300,5 +303,43 @@ void Game::frictionToAll()
 	for (int i = 0; i < m_lastShell; i++)
 	{
 		applyFriction(m_velocitys[i]);
+	}
+}
+
+
+//Check if the two Circles collide/ overlap
+/// <param name="t_firstIndex"> Index of first Shell </param>
+/// <param name="secondIndex"> Index of second Shell </param>
+/// <returns> True is overlapping </returns>
+bool Game::checkForACollision(int t_firstIndex, int t_secondIndex)
+{
+	sf::Vector2f difference = m_positions[t_firstIndex] - m_positions[t_secondIndex];
+
+	if (-DIAMETER > difference.x || DIAMETER < difference.x)
+	{
+		return false;					//Too far apart on x-axis
+	}
+
+	if (-DIAMETER > difference.y || DIAMETER < difference.y)
+	{
+		return false;					//Too far apart on x-axis
+	}
+
+	float distanceSquared = 0.0f;
+	distanceSquared = vectorLengthSquared(difference);
+
+	if (distanceSquared < DIAMETER_SQUARED)
+	{
+		return true; 
+	}
+
+	return false;						//Overlapping Corner
+}
+
+void Game::checkCollisions()
+{
+	if (checkForACollision(0, 1))
+	{
+		cout << "Bang Bang!!" << endl;
 	}
 }
