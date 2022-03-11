@@ -86,7 +86,7 @@ private:
 	bool m_aimingNow{ false };					//Player is aiming (nothing will happen while its false)
 												//wont start until ready to aimingNow is true
 
-	int m_lastShell{ 2 };						//Number of active Shells
+	int m_lastShell{ 7 };						//Number of active Shells
 };
 
 #endif // !GAME_HPP

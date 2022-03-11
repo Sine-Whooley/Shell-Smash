@@ -116,7 +116,7 @@ void Game::processMousePressed(sf::Event t_event)
 
 		m_aimLine.clear();
 											
-		point.position = m_positions[0];
+		point.position = m_positions[m_lastShell - 1];
 										
 		m_aimLine.append(point);				
 
@@ -154,10 +154,10 @@ void Game::processMouseRelease(sf::Event t_event)
 		mouseLocation.x = static_cast<float>(t_event.mouseButton.x);
 		mouseLocation.y = static_cast<float>(t_event.mouseButton.y);
 
-		direction = mouseLocation - m_positions[0];
+		direction = mouseLocation - m_positions[m_lastShell - 1];
 
 		m_aimingNow = false;
-		m_velocitys[0] = direction * POWER_ADJUSTMENT;
+		m_velocitys[m_lastShell - 1] = direction * POWER_ADJUSTMENT;
 	}
 }
 
@@ -214,17 +214,34 @@ void Game::render()
 
 void Game::setUpShells()
 {
+	sf::Vector2f redLocations[6] =
+	{
+		{300.0f, 300.0f},
+		{250.0f, 250.0f},
+		{250.0f, 350.0f},
+		{200.0f, 300.0f},
+		{200.0f, 400.0f},
+		{200.0f, 200.0f}
+	}; //Sets up an Array with 6 values
+
+	const int NO_OF_RED_SHELLS = 6;
+
 	m_shell.setFillColor(sf::Color::Green);
 	m_shell.setRadius(RADIUS);
 	m_shell.setOrigin(RADIUS, RADIUS);
 
-	for (int i = 0; i < NO_OF_SHELLS; i++)
+	for (int i = 0; i < NO_OF_RED_SHELLS; i++)
 	{
 		m_velocitys[i] = sf::Vector2f {0.0f, 0.0f};
-		m_positions[i] = sf::Vector2f{ 200.0f + i * 100.0f, 300.0f };
+		m_positions[i] = redLocations[i];
+		m_isGreen[i] = false;
 	}
-	m_isGreen[0] = true;
-	m_isGreen[1] = false;
+	for (int i = NO_OF_RED_SHELLS; i < NO_OF_SHELLS; i++)
+	{
+		m_positions[i] = sf::Vector2f{ 700.0f, 300.0f };
+		m_velocitys[i] = sf::Vector2f{ 0.0f, 0.0f };
+		m_isGreen[i] = true;
+	}
 
 	//m_velocitys[1] = sf::Vector2f{ 4.0f, 6.0f };
 }
@@ -339,10 +356,15 @@ bool Game::checkForACollision(int t_firstIndex, int t_secondIndex)
 
 void Game::checkCollisions()
 {
-	if (checkForACollision(0, 1))
+	for (int i = 0; i < m_lastShell; i++)
 	{
-		cout << "Bang Bang!!" << endl;
-		processCollision(0,1);
+		for (int j = i+1; j < m_lastShell; j++)
+		{
+			if (checkForACollision(i, j))
+			{
+				processCollision(i,j);
+			}
+		}
 	}
 }
 
