@@ -363,4 +363,10 @@ void Game::processCollision(int t_firstIndex, int t_secondIndex)
 
 	m_velocitys[t_firstIndex] = keepOne + twoSwap;
 	m_velocitys[t_secondIndex] = keepTwo + oneSwap;
+
+	while (checkForACollision(t_firstIndex, t_secondIndex))
+	{
+		m_positions[t_firstIndex] += m_velocitys[t_firstIndex] * 0.01f;  // Move 10% away
+		m_positions[t_secondIndex] += m_velocitys[t_secondIndex] * 0.01f;
+	}
 }
