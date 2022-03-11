@@ -161,6 +161,7 @@ void Game::processMouseRelease(sf::Event t_event)
 	}
 }
 
+
 /// <summary>
 /// Update the game world
 /// </summary>
@@ -341,5 +342,25 @@ void Game::checkCollisions()
 	if (checkForACollision(0, 1))
 	{
 		cout << "Bang Bang!!" << endl;
+		processCollision(0,1);
 	}
+}
+
+
+//Split shell velocity along line and plane of collision
+//Swap the component along the line of centers
+/// <param name="t_firstIndex"></param>
+/// <param name="t_secondIndex"></param>
+void Game::processCollision(int t_firstIndex, int t_secondIndex)
+{
+	sf::Vector2f lineOfCenters = m_positions[t_firstIndex] - m_positions[t_secondIndex];
+
+	sf::Vector2f oneSwap = vectorProjection(m_velocitys[t_firstIndex], lineOfCenters);
+	sf::Vector2f twoSwap = vectorProjection(m_velocitys[t_secondIndex], lineOfCenters);
+
+	sf::Vector2f keepOne = vectorRejection(m_velocitys[t_firstIndex], lineOfCenters);
+	sf::Vector2f keepTwo = vectorRejection(m_velocitys[t_secondIndex], lineOfCenters);
+
+	m_velocitys[t_firstIndex] = keepOne + twoSwap;
+	m_velocitys[t_secondIndex] = keepTwo + oneSwap;
 }

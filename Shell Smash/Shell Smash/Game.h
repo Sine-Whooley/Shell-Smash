@@ -66,7 +66,7 @@ private:
 	void frictionToAll();
 	bool checkForACollision(int t_firstIndex, int t_secondIndex);
 	void checkCollisions();
-
+	void processCollision(int t_firstIndex, int t_secondIndex);
 
 	//--------------------
 	// Member variables 
