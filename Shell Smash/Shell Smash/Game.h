@@ -21,8 +21,9 @@ const float LOW_FRICTION = 0.995f;
 const float HIGH_FRICTION = 0.991f;
 const float STALL_SPEED = 0.5f;
 const float SLOW_SPEED = 15.0f;
-const int NO_OF_SHELLS = 11;
 
+const int NO_OF_SHELLS = 11;
+const int NO_SCORES = 10;
 
 /// <summary>
 /// include guards used so we don't process this file twice
@@ -55,10 +56,13 @@ private:
 	void processMouseMove(sf::Event t_event);
 	void processMouseRelease(sf::Event t_event);
 	
-	
+	void drawShells();
+	void drawScores();
 	void update(sf::Time t_deltaTime);
 	void render();
 	void setUpShells();							//Creating definition 
+	void setUpScores();
+	void ageScores();
 	void moveShell();
 	void checkBoundry(sf::Vector2f t_position, sf::Vector2f &t_velocity );
 	void checkBoundries();
@@ -79,14 +83,20 @@ private:
 	sf::Vector2f m_positions[NO_OF_SHELLS];		// position of shell
 	sf::Vector2f m_velocitys[NO_OF_SHELLS];		// velocity of shell
 	sf::VertexArray m_aimLine{ sf::Lines };		//Line for aiming
-
+	sf::Vector2f m_scoreLocation[NO_SCORES];	//Score location
+	sf::Font m_font;							//Font for Scores
+	sf::Text m_ScoreText;						//Text for displaying Scores
 
 	bool m_isGreen[NO_OF_SHELLS];				//Is the shell green or red
 	bool m_readyToFire{ true };					//Player allowed to fire
 	bool m_aimingNow{ false };					//Player is aiming (nothing will happen while its false)
 												//wont start until ready to aimingNow is true
+	bool m_scoreWhite[NO_SCORES];				//Score is White
 
 	int m_lastShell{ 7 };						//Number of active Shells
+	int m_scoreValues[NO_SCORES];				//Score Value
+	int m_scoreDuration[NO_SCORES];				//Time left on screen
+
 };
 
 #endif // !GAME_HPP

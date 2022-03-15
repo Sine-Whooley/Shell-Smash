@@ -25,7 +25,7 @@
 //---------------
 // Main enrtry point
 // Sucess or Failure
-//---------------
+//----------------
 int main()
 {
 	Game game;

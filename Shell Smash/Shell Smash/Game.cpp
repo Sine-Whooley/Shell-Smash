@@ -24,6 +24,7 @@ Game::Game() :
 	m_exitGame{false} //when true game will exit
 {
 	setUpShells();
+	setUpScores();
 }
 
 /// <summary>
@@ -161,6 +162,46 @@ void Game::processMouseRelease(sf::Event t_event)
 	}
 }
 
+void Game::drawShells()
+{
+	for (int i = 0; i < m_lastShell; i++)
+	{
+		m_shell.setPosition(m_positions[i]);
+		if (m_isGreen[i])
+		{
+			m_shell.setFillColor(sf::Color::Green);
+		}
+		else
+		{
+			m_shell.setFillColor(sf::Color::Red);
+		}
+
+		m_window.draw(m_shell);
+	}
+
+}
+
+void Game::drawScores()
+{
+	for (int i = 0; i < NO_SCORES; i++)
+	{
+		if (m_scoreDuration[i] > 0)
+		{
+			if (m_scoreWhite)
+			{
+				m_ScoreText.setFillColor(sf::Color::White);
+			}
+			else
+			{
+				m_ScoreText.setFillColor(sf::Color::Blue);
+			}
+			m_ScoreText.setPosition(m_scoreLocation[i]);
+			m_ScoreText.setString(std::to_string(m_scoreValues[i]));
+			m_window.draw(m_ScoreText);
+		}
+	}
+}
+
 
 /// <summary>
 /// Update the game world
@@ -178,6 +219,7 @@ void Game::update(sf::Time t_deltaTime)
 	checkBoundries();
 	frictionToAll();
 	checkCollisions();
+	ageScores();
 }
 
 /// <summary>
@@ -186,30 +228,18 @@ void Game::update(sf::Time t_deltaTime)
 void Game::render()
 {
 	m_window.clear(sf::Color::Black);
-	
-	for (int i = 0; i < m_lastShell; i++)
-	{
-		m_shell.setPosition(m_positions[i]);
-		if (m_isGreen[i])
-		{
-			m_shell.setFillColor(sf::Color::Green);
-		}
-		else
-		{
-			m_shell.setFillColor(sf::Color::Red);
-		}
-		
-		m_window.draw(m_shell);
-	}
-		
+	drawShells();
+	drawScores();
+	setUpScores();
 
 	//Displays it on screen
 	if (m_aimingNow)
 	{
 		m_window.draw(m_aimLine);					
 	}
-
+	//m_window.draw(m_ScoreText);
 	m_window.display();
+	
 }
 
 void Game::setUpShells()
@@ -244,6 +274,45 @@ void Game::setUpShells()
 	}
 
 	//m_velocitys[1] = sf::Vector2f{ 4.0f, 6.0f };
+}
+
+void Game::setUpScores()
+{
+	if (!m_font.loadFromFile("ASSETS\\FONTS\\arial-black.ttf"))
+	{
+		cout << "Problem with Font" << endl;
+	}
+	m_ScoreText.setFont(m_font);
+	m_ScoreText.setCharacterSize(20U);
+	m_ScoreText.setFillColor(sf::Color::White);
+	m_ScoreText.setPosition(150.0f, 100.0f);
+	m_ScoreText.setString("teheheheh");
+
+	for (int i = 0; i < NO_SCORES; i++)
+	{
+		m_scoreDuration[i] = 0;
+		m_scoreLocation[i] = sf::Vector2f{ 0.0f, 0.0f };
+		m_scoreWhite[i] = true;
+		m_scoreValues[i] = 0;
+	}
+	//m_scoreDuration[0] = 200;
+	//m_scoreValues[0] = 20;
+}
+
+void Game::ageScores()
+{
+	for (int i = 0; i < NO_SCORES; i++)
+	{
+		if (m_scoreDuration[i] > 0)
+		{
+			m_scoreDuration[i] --;
+		}
+	}
+}
+
+void Game::createScore(sf::Vector2f t_location, bool t_isWhite)
+{
+
 }
 
 void Game::moveShell()
