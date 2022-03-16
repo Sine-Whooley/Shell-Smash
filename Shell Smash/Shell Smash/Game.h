@@ -63,6 +63,7 @@ private:
 	void setUpShells();							//Creating definition 
 	void setUpScores();
 	void ageScores();
+	void createScore(sf::Vector2f t_location, bool t_isWhite);
 	void moveShell();
 	void checkBoundry(sf::Vector2f t_position, sf::Vector2f &t_velocity );
 	void checkBoundries();
@@ -96,6 +97,7 @@ private:
 	int m_lastShell{ 7 };						//Number of active Shells
 	int m_scoreValues[NO_SCORES];				//Score Value
 	int m_scoreDuration[NO_SCORES];				//Time left on screen
+	int m_currentScore = 1;
 
 };
 

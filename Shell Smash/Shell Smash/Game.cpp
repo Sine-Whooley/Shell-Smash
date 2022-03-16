@@ -312,7 +312,42 @@ void Game::ageScores()
 
 void Game::createScore(sf::Vector2f t_location, bool t_isWhite)
 {
+	bool found = false;
+	int index = -1;
 
+	while (!found && index < NO_SCORES)
+	{
+		index++;
+
+		if(m_scoreDuration[index] == 0)
+		{
+			found = true;
+		}
+	}
+
+	if (index == NO_SCORES)
+	{
+		index = 0;
+	}
+
+	m_scoreDuration[index] = 60;
+	m_scoreLocation[index] = t_location;
+	m_scoreWhite[index] = t_isWhite;
+
+	if (t_isWhite)
+	{
+		m_scoreValues[index] = m_currentScore * 10;
+	}
+	else
+	{
+		m_scoreValues[index] = m_currentScore * 100;
+	}
+
+	if (m_currentScore < 24) 
+	{
+	m_currentScore++;
+	}
+	
 }
 
 void Game::moveShell()
@@ -444,6 +479,9 @@ void Game::checkCollisions()
 /// <param name="t_secondIndex"></param>
 void Game::processCollision(int t_firstIndex, int t_secondIndex)
 {
+	bool greenOnGreen = false;
+
+	sf::Vector2f midPoint = (m_positions[t_firstIndex] + m_positions[t_secondIndex]) / 2.0f;
 	sf::Vector2f lineOfCenters = m_positions[t_firstIndex] - m_positions[t_secondIndex];
 
 	sf::Vector2f oneSwap = vectorProjection(m_velocitys[t_firstIndex], lineOfCenters);
@@ -460,4 +498,9 @@ void Game::processCollision(int t_firstIndex, int t_secondIndex)
 		m_positions[t_firstIndex] += m_velocitys[t_firstIndex] * 0.01f;  // Move 10% away
 		m_positions[t_secondIndex] += m_velocitys[t_secondIndex] * 0.01f;
 	}
+	if (m_isGreen[t_firstIndex] && m_isGreen[t_secondIndex])
+	{
+		greenOnGreen = true;
+	}
+	createScore(midPoint, !greenOnGreen);
 }
