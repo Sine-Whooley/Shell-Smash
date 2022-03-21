@@ -352,14 +352,22 @@ void Game::createScore(sf::Vector2f t_location, bool t_isWhite)
 
 void Game::moveShell()
 {
+	bool allStopped = true;
+
 	for(int i =0; i < m_lastShell; i++)
 	{
 		m_positions[i] += m_velocitys[i];
+
+		if (m_velocitys[i] != sf::Vector2f{ 0.0f, 0.0f })
+		{
+			allStopped = false;
+		}
 	}
 
-	if (m_velocitys[0] == sf::Vector2f{ 0.0f,0.0f } && !m_aimingNow)
+	if (allStopped & !m_readyToFire) //m_velocitys[0] == sf::Vector2f{ 0.0f,0.0f } && !m_aimingNow)
 	{
 		m_readyToFire = true;
+		placeNewShell();
 	}
 }
 
@@ -503,4 +511,21 @@ void Game::processCollision(int t_firstIndex, int t_secondIndex)
 		greenOnGreen = true;
 	}
 	createScore(midPoint, !greenOnGreen);
+}
+
+void Game::placeNewShell()
+{
+	int index = 0;
+
+	if (m_lastShell < NO_OF_SHELLS-1)
+	{
+		m_lastShell++;
+		for (int i = 0; i < m_lastShell; i++)
+		{
+			while (!checkForACollision(index, m_lastShell))
+			{
+				m_positions[m_lastShell] += sf::Vector2f{ -0.03f, 0.0f };
+			}
+		}
+	}
 }
